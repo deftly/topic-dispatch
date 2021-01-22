@@ -46,7 +46,7 @@ function remove (topics, topic, fn) {
 }
 
 function removeAll(topics, topic) {
-    if (topic) {
+    if (topic != undefined) {
         var m = matcher.create(topic)
         delete topics[m.topic]
     } else {
