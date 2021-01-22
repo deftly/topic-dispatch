@@ -37,4 +37,15 @@ describe('Dispatch', function() {
         dispatcher.dispatch('three', {})
         dispatched.should.eql(1)
     })
+
+    it('should remove all topics when none are specified', function () {
+        const dispatcher = Dispatcher()
+        var dispatched = 0;
+        dispatcher.on('*', () => { dispatched ++ })
+        dispatcher.on('#', () => { dispatched ++ })
+        dispatcher.on('one', () => { dispatched ++ })
+        dispatcher.removeAll()
+        dispatcher.dispatch('one', {})
+        dispatched.should.eql(0)
+    })
 })

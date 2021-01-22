@@ -46,8 +46,14 @@ function remove (topics, topic, fn) {
 }
 
 function removeAll(topics, topic) {
-    var m = matcher.create(topic)
-    delete topics[m.topic]
+    if (topic) {
+        var m = matcher.create(topic)
+        delete topics[m.topic]
+    } else {
+        _.each(topics, (v, k) => {
+            delete topics[k]
+        })
+    }
 }
 
 module.exports = function() {
