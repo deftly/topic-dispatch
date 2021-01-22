@@ -14,6 +14,14 @@ function on (topics, topic, fn) {
     }
 }
 
+function once (topics, topic, fn) {
+    var callOnce = function callOnce(t, e) {
+        fn(t, e)
+        remove(topics, topic, callOnce)
+    }
+    on(topics, topic, callOnce)
+}
+
 function dispatch (topics, topic, event) {
     _.each(topics, (v, k) => {
         if (v.test(topic)) {
@@ -47,6 +55,7 @@ module.exports = function() {
     return {
         dispatch: dispatch.bind(null, topics),
         on: on.bind(null, topics),
+        once: once.bind(null, topics),
         remove: remove.bind(null, topics),
         removeAll: removeAll.bind(null, topics)
     }

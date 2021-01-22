@@ -27,4 +27,14 @@ describe('Dispatch', function() {
 
         dispatched.should.eql(['test', 'test', 'test'])
     })
+
+    it('should only dispatch a single time on once', function () {
+        const dispatcher = Dispatcher()
+        var dispatched = 0
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.dispatch('one', {})
+        dispatcher.dispatch('two', {})
+        dispatcher.dispatch('three', {})
+        dispatched.should.eql(1)
+    })
 })
