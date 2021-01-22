@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](///compare/v1.1.1...v1.1.2) (2021-01-22)
+
+
+### Bug Fixes
+
+* correct error in removeAll ([d0af785](///commit/d0af7857e4ae7f8bcebbd8f6d8deb15175ad3613))
+
 ### [1.1.1](///compare/v1.1.0...v1.1.1) (2021-01-22)
 
 
