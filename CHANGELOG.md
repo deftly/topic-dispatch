@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](///compare/v1.1.2...v1.1.3) (2021-01-24)
+
+
+### Bug Fixes
+
+* prevent binding non-functions to events ([8c61a6f](///commit/8c61a6fe2e96faf3f6a872b5b84379edce46eab0))
+
 ### [1.1.2](///compare/v1.1.1...v1.1.2) (2021-01-22)
 
 
