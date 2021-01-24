@@ -40,6 +40,19 @@ describe('Dispatch', function() {
         dispatched.should.eql(1)
     })
 
+    it('should not remove one time subscribers until after dispatch', function () {
+        const dispatcher = Dispatcher()
+        var dispatched = 0
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.dispatch('one', {})
+        dispatched.should.eql(6)
+    })
+
     it('should dispatch to each single subscribe at the same time', function () {
         const dispatcher = Dispatcher()
         var dispatched = 0

@@ -29,13 +29,10 @@ function once (topics, topic, fn) {
 }
 
 function dispatch (topics, topic, event) {
-    _.each(topics, (v, k) => {
+    _.each(topics, (v) => {
         if (v.test(topic)) {
-            v.calls = _.filter(v.calls)
-            _.each(v.calls, (c, i) => {
-                if (!c) {
-                    v.calls.splice
-                }
+            var filtered = _.filter(v.calls).slice(0)
+            _.each(filtered, c => {
                 try {
                     c.call(null, topic, event)
                 } catch (e) {
