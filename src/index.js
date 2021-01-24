@@ -2,12 +2,15 @@ const matcher = require('../src/matcher')
 const _ = require('fauxdash')
 
 function on (topics, topic, fn) {
-    var m = matcher.create(topic)
-    var obj = {
-        test: m.test,
-        calls: [fn]
+    if (typeof fn !== 'function') {
+        throw new Error(`Cannot attach ${typeof fn} to '${topic}' as a handler`)
     }
+    var m = matcher.create(topic)
     if (!topics[topic]) {
+        var obj = {
+            test: m.test,
+            calls: [fn]
+        }
         topics[topic] = obj
     } else {
         topics[topic].calls.push(fn)
@@ -15,6 +18,9 @@ function on (topics, topic, fn) {
 }
 
 function once (topics, topic, fn) {
+    if (typeof fn !== 'function') {
+        throw new Error(`Cannot attach ${typeof fn} to '${topic}' as a handler`)
+    }
     var callOnce = function callOnce(t, e) {
         fn(t, e)
         remove(topics, topic, callOnce)
@@ -25,7 +31,11 @@ function once (topics, topic, fn) {
 function dispatch (topics, topic, event) {
     _.each(topics, (v, k) => {
         if (v.test(topic)) {
-            _.each(v.calls, c => {
+            v.calls = _.filter(v.calls)
+            _.each(v.calls, (c, i) => {
+                if (!c) {
+                    v.calls.splice
+                }
                 try {
                     c.call(null, topic, event)
                 } catch (e) {
