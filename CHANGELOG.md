@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](///compare/v1.1.4...v1.2.0) (2021-01-27)
+
+
+### Features
+
+* rework api to align with event emitter ([6fcb4d5](///commit/6fcb4d5e2d7731cf024139a06db39fa2178ab49b))
+
 ### [1.1.4](///compare/v1.1.3...v1.1.4) (2021-01-24)
 
 
