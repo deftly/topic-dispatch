@@ -23,12 +23,12 @@ function once (topics, topic, fn) {
     }
     var callOnce = function callOnce(t, e) {
         fn(t, e)
-        remove(topics, topic, callOnce)
+        removeListener(topics, topic, callOnce)
     }
     on(topics, topic, callOnce)
 }
 
-function dispatch (topics, topic, event) {
+function emit (topics, topic, event) {
     _.each(topics, (v) => {
         if (v.test(topic)) {
             var filtered = _.filter(v.calls).slice(0)
@@ -36,23 +36,26 @@ function dispatch (topics, topic, event) {
                 try {
                     c.call(null, topic, event)
                 } catch (e) {
-                    console.error(`exception caught dispatching event to topic '${topic}':\n  ${e.stack}`)
+                    console.error(`exception caught emiting event to topic '${topic}':\n  ${e.stack}`)
                 }
             })
         }
     })
 }
 
-function remove (topics, topic, fn) {
+function removeListener (topics, topic, fn) {
     var m = matcher.create(topic)
-    let list = topics[m.topic].calls
-    list.splice(list.indexOf(fn), 1)
-    if (list.length == 0) {
-        delete topics[m.topic]
+    var bindings = topics[m.topic]
+    if (bindings) {
+        let list = bindings.calls
+        list.splice(list.indexOf(fn), 1)
+        if (list.length == 0) {
+            delete topics[m.topic]
+        }
     }
 }
 
-function removeAll(topics, topic) {
+function removeAllListeners (topics, topic) {
     if (topic != undefined) {
         var m = matcher.create(topic)
         delete topics[m.topic]
@@ -66,10 +69,10 @@ function removeAll(topics, topic) {
 module.exports = function() {
     const topics = {}
     return {
-        dispatch: dispatch.bind(null, topics),
+        emit: emit.bind(null, topics),
         on: on.bind(null, topics),
         once: once.bind(null, topics),
-        remove: remove.bind(null, topics),
-        removeAll: removeAll.bind(null, topics)
+        removeListener: removeListener.bind(null, topics),
+        removeAllListeners: removeAllListeners.bind(null, topics)
     }
 }

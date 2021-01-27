@@ -16,6 +16,18 @@ topics.on('account.*', (topic, event) => {}) // catch anything starting with 'ac
 topics.on('*.created', (topic, event) => {}) // catch anything ending in .created'
 topics.on('account.#', (topic, event) => {}) // catch any two segment topic beginning with `account`
 topics.on('#.created', (topic, event) => {}) // catch any two segment topic ending with `created`
+topics.once('ready', (topic, event) => {}) // removes itself after one even is received
 
-topics.dispatch('account.created', {}) // will call all but one of the functions listed above
+function handler = () => {}
+topics.on('added', handler)
+topics.removeListener('added', handler) // removes specific handler from a topic
+
+topics.on('added', () => {})
+topics.on('added', () => {})
+topics.on('added', () => {})
+topics.removeAllListeners('added') // removes all handlers from topic
+
+topics.emit('account.created', {}) // will call all but one of the functions listed above
+
+topics.cleanup() // erase all bindings
 ```

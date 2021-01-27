@@ -12,7 +12,7 @@ describe('Dispatch', function() {
         dispatcher.on('*', () => { dispatched.push(3) })
         dispatcher.on('*', () => { dispatched.push(4) })
 
-        dispatcher.dispatch('one')
+        dispatcher.emit('one')
 
         dispatched.should.eql([1, 2, 3, 4])
     })
@@ -25,7 +25,7 @@ describe('Dispatch', function() {
         dispatcher.on('*', (t, ev) => { throw new Error('uh oh') })
         dispatcher.on('*', (t, ev) => { dispatched.push(ev.title) })
 
-        dispatcher.dispatch('one', {title: 'test'})
+        dispatcher.emit('one', {title: 'test'})
 
         dispatched.should.eql(['test', 'test', 'test'])
     })
@@ -34,9 +34,9 @@ describe('Dispatch', function() {
         const dispatcher = Dispatcher()
         var dispatched = 0
         dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.dispatch('one', {})
-        dispatcher.dispatch('two', {})
-        dispatcher.dispatch('three', {})
+        dispatcher.emit('one', {})
+        dispatcher.emit('two', {})
+        dispatcher.emit('three', {})
         dispatched.should.eql(1)
     })
 
@@ -49,7 +49,7 @@ describe('Dispatch', function() {
         dispatcher.once('*', (t, ev) => { dispatched ++})
         dispatcher.once('*', (t, ev) => { dispatched ++})
         dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.dispatch('one', {})
+        dispatcher.emit('one', {})
         dispatched.should.eql(6)
     })
 
@@ -60,8 +60,8 @@ describe('Dispatch', function() {
         dispatcher.once('*', (t, ev) => { dispatched ++})
         dispatcher.once('#', (t, ev) => { dispatched ++})
         dispatcher.on('one', (t, ev) => { other = other + 3 })
-        dispatcher.dispatch('one', {})
-        dispatcher.dispatch('one', {})
+        dispatcher.emit('one', {})
+        dispatcher.emit('one', {})
         dispatched.should.eql(2)
         other.should.eql(6)
     })
@@ -90,8 +90,8 @@ describe('Dispatch', function() {
         dispatcher.on('*', () => { dispatched ++ })
         dispatcher.on('#', () => { dispatched ++ })
         dispatcher.on('one', () => { dispatched ++ })
-        dispatcher.removeAll()
-        dispatcher.dispatch('one', {})
+        dispatcher.removeAllListeners()
+        dispatcher.emit('one', {})
         dispatched.should.eql(0)
     })
 })
