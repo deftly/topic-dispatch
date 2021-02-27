@@ -1,6 +1,7 @@
 require('./setup')
 const { should } = require('chai')
 const { assert } = require('console')
+const { join } = require('path')
 const Dispatcher = require('../src')
 
 describe('Dispatch', function() {
@@ -93,5 +94,71 @@ describe('Dispatch', function() {
         dispatcher.removeAllListeners()
         dispatcher.emit('one', {})
         dispatched.should.eql(0)
+    })
+
+    it('should correctly unsubscribe from subscription "off" call', function () {
+        const dispatcher = Dispatcher()
+        const subscription = dispatcher.on('*', () => {})
+        subscription.off()
+        dispatcher.isQuiet().should.eql(true)
+    })
+
+    it('should return all synchronous responses via promise', function () {
+        const dispatcher = Dispatcher()
+        dispatcher.on('*', () => 10)
+        dispatcher.on('*', () => 5)
+        dispatcher.on('*', () => 15)
+        const result = dispatcher.emit('ohhi', {})
+        return result
+            .then(list => list.reduce((a, b) => a + b, 0))
+            .should.eventually.eql(30)
+    })
+
+    it('should return all asynchronous responses via promise', function () {
+        const dispatcher = Dispatcher()
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res(10), 20)    
+        }))
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res(8), 40)    
+        }))
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res(12), 10)    
+        }))
+        const result = dispatcher.emit('ohhi', {})
+        return result
+            .should.eventually.eql([10, 8, 12])
+    })
+
+    it('should aggregate synchronous and asynchronous responses via promise', function () {
+        const dispatcher = Dispatcher()
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res('a'), 30)    
+        }))
+        dispatcher.on('*', () => 'b')
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res('c'), 10)    
+        }))
+        dispatcher.on('*', () => 'd')
+        const result = dispatcher.emit('ohhi', {})
+        return result
+            .then(list => list.reduce((a, b) => a + b, ''))
+            .should.eventually.eql('abcd')     
+    })
+
+    it('should direct responses to original subscription reply handlers', function () {
+        const dispatcher = Dispatcher()
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res('a'), 30)    
+        }))
+        dispatcher.on('*', () => 'b')
+        dispatcher.on('*', () => new Promise((res) => {
+            setTimeout(() => res('c'), 10)    
+        }))
+        dispatcher.on('*', () => 'd')
+        const result = dispatcher.emit('ohhi', {})
+        return result
+            .then(list => list.reduce((a, b) => a + b, ''))
+            .should.eventually.eql('abcd')     
     })
 })
