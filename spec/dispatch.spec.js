@@ -22,13 +22,12 @@ describe('Dispatch', function() {
         const dispatcher = Dispatcher()
         var dispatched = []
         dispatcher.on('*', (t, ev) => { dispatched.push(ev.title) })
-        dispatcher.on('*', (t, ev) => { dispatched.push(ev.title) })
         dispatcher.on('*', (t, ev) => { throw new Error('uh oh') })
-        dispatcher.on('*', (t, ev) => { dispatched.push(ev.title) })
+        dispatcher.on('*', (t, ev) => { dispatched.push(ev.title + ' two') })
 
         dispatcher.emit('one', {title: 'test'})
 
-        dispatched.should.eql(['test', 'test', 'test'])
+        dispatched.should.eql(['test', 'test two'])
     })
 
     it('should only dispatch a single time on once', function () {
@@ -44,14 +43,15 @@ describe('Dispatch', function() {
     it('should not remove one time subscribers until after dispatch', function () {
         const dispatcher = Dispatcher()
         var dispatched = 0
-        dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (t, ev) => { dispatched += 1})
+        dispatcher.once('*', (t, ev) => { dispatched += 2})
+        dispatcher.once('*', (t, ev) => { dispatched += 3})
+        dispatcher.once('*', (t, ev) => { dispatched += 4})
+        dispatcher.once('*', (t, ev) => { dispatched += 5})
+        dispatcher.once('*', (t, ev) => { dispatched += 6})
         dispatcher.emit('one', {})
-        dispatched.should.eql(6)
+        dispatched.should.eql(21)
+        dispatcher.isQuiet().should.eql(true)
     })
 
     it('should dispatch to each single subscribe at the same time', function () {
@@ -94,6 +94,7 @@ describe('Dispatch', function() {
         dispatcher.removeAllListeners()
         dispatcher.emit('one', {})
         dispatched.should.eql(0)
+        dispatcher.isQuiet().should.eql(true)
     })
 
     it('should correctly unsubscribe from subscription "off" call', function () {
@@ -148,17 +149,13 @@ describe('Dispatch', function() {
 
     it('should direct responses to original subscription reply handlers', function () {
         const dispatcher = Dispatcher()
-        dispatcher.on('*', () => new Promise((res) => {
+        const results = []
+        const sub1 = dispatcher.on('*', () => new Promise((res) => {
             setTimeout(() => res('a'), 30)    
         }))
-        dispatcher.on('*', () => 'b')
-        dispatcher.on('*', () => new Promise((res) => {
-            setTimeout(() => res('c'), 10)    
-        }))
-        dispatcher.on('*', () => 'd')
-        const result = dispatcher.emit('ohhi', {})
-        return result
-            .then(list => list.reduce((a, b) => a + b, ''))
-            .should.eventually.eql('abcd')     
+        sub1.then(x => {results.push(x)})
+        const result = dispatcher.emit('test', '')
+        return result.then(() => results.should.eql(['a']))
     })
+
 })
