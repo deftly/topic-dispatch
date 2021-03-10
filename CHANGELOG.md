@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](///compare/v1.2.0...v1.3.0) (2021-03-10)
+
+
+### Features
+
+* return results from handlers via promises, return subscription object from 'on' call ([ac7d54a](///commit/ac7d54adc73d224881e15d3691674170b6bbde7c))
+
 ## [1.2.0](///compare/v1.1.4...v1.2.0) (2021-01-27)
 
 
