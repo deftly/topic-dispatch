@@ -1,3 +1,5 @@
+const _ = require('fauxdash')
+
 function remove (topics, pattern, fn) {
     var topic = topics[pattern]
     if (topic) {
