@@ -25,6 +25,8 @@ function createTopic (topics, pattern) {
 
 function emit (topics, topicName, event) {
     const results = []
+    const result = _.future()
+    // process.nextTick(() => {
     _.each(topics, (v) => {
         if (v.test(topicName)) {
             var filtered = _.filter(v.calls).slice(0)
@@ -43,8 +45,14 @@ function emit (topics, topicName, event) {
                 }
             })
         }
+    // })
+    console.log(`waiting on ${results.length}`)
+    Promise
+        .all(results)
+        .then(r => result.resolve(r))
+        .catch(e => result.reject(e))
     })
-    return Promise.all(results)
+    return result.promise
 }
 
 function getTopic (topics, pattern) {
