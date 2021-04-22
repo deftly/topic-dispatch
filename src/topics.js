@@ -30,7 +30,7 @@ function emit (topics, topicName, event) {
             var filtered = _.filter(v.calls).slice(0)
             _.each(filtered, c => {
                 try {
-                    const result = c.handle(topicName, event)
+                    const result = c.handle(event, topicName)
                     if (result) {
                         if (result.then && result.catch) {
                             results.push(result)

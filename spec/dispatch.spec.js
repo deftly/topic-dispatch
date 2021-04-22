@@ -21,9 +21,9 @@ describe('Dispatch', function() {
     it('should ignore exceptions in matching', function() {
         const dispatcher = Dispatcher()
         var dispatched = []
-        dispatcher.on('*', (t, ev) => { dispatched.push(ev.title) })
-        dispatcher.on('*', (t, ev) => { throw new Error('uh oh') })
-        dispatcher.on('*', (t, ev) => { dispatched.push(ev.title + ' two') })
+        dispatcher.on('*', (ev, t) => { dispatched.push(ev.title) })
+        dispatcher.on('*', (ev, t) => { throw new Error('uh oh') })
+        dispatcher.on('*', (ev, t) => { dispatched.push(ev.title + ' two') })
 
         dispatcher.emit('one', {title: 'test'})
 
@@ -33,7 +33,7 @@ describe('Dispatch', function() {
     it('should only dispatch a single time on once', function () {
         const dispatcher = Dispatcher()
         var dispatched = 0
-        dispatcher.once('*', (t, ev) => { dispatched ++})
+        dispatcher.once('*', (ev, t) => { dispatched ++})
         dispatcher.emit('one', {})
         dispatcher.emit('two', {})
         dispatcher.emit('three', {})
@@ -43,12 +43,12 @@ describe('Dispatch', function() {
     it('should not remove one time subscribers until after dispatch', function () {
         const dispatcher = Dispatcher()
         var dispatched = 0
-        dispatcher.once('*', (t, ev) => { dispatched += 1})
-        dispatcher.once('*', (t, ev) => { dispatched += 2})
-        dispatcher.once('*', (t, ev) => { dispatched += 3})
-        dispatcher.once('*', (t, ev) => { dispatched += 4})
-        dispatcher.once('*', (t, ev) => { dispatched += 5})
-        dispatcher.once('*', (t, ev) => { dispatched += 6})
+        dispatcher.once('*', (ev, t) => { dispatched += 1})
+        dispatcher.once('*', (ev, t) => { dispatched += 2})
+        dispatcher.once('*', (ev, t) => { dispatched += 3})
+        dispatcher.once('*', (ev, t) => { dispatched += 4})
+        dispatcher.once('*', (ev, t) => { dispatched += 5})
+        dispatcher.once('*', (ev, t) => { dispatched += 6})
         dispatcher.emit('one', {})
         dispatched.should.eql(21)
         dispatcher.isQuiet().should.eql(true)
@@ -58,9 +58,9 @@ describe('Dispatch', function() {
         const dispatcher = Dispatcher()
         var dispatched = 0
         var other = 0
-        dispatcher.once('*', (t, ev) => { dispatched ++})
-        dispatcher.once('#', (t, ev) => { dispatched ++})
-        dispatcher.on('one', (t, ev) => { other = other + 3 })
+        dispatcher.once('*', (ev, t) => { dispatched ++})
+        dispatcher.once('#', (ev, t) => { dispatched ++})
+        dispatcher.on('one', (ev, t) => { other = other + 3 })
         dispatcher.emit('one', {})
         dispatcher.emit('one', {})
         dispatched.should.eql(2)

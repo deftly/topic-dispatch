@@ -26,8 +26,8 @@ function subscribe (topics, pattern, fn) {
         catch: (onErr) => {
             this.onError = onErr
         },
-        handle: (topic, data) => {
-            var result = fn(topic, data)
+        handle: (data, topic) => {
+            var result = fn(data, topic)
             if (result) {
                 if (result.then && result.catch) {
                     result

@@ -9,14 +9,14 @@ It is probably not for you. Check out Jim Cowart's [`monologue`](https://github.
 ```js
 const topics = require('topic-dispatch')
 
-topics.on('*', (topic, event) => {}) // catch all
-topics.on('#', (topic, event) => {}) // catch all
-topics.on('*', (topic, event) => {}) // catch 'connected'
-topics.on('account.*', (topic, event) => {}) // catch anything starting with 'account'
-topics.on('*.created', (topic, event) => {}) // catch anything ending in .created'
-topics.on('account.#', (topic, event) => {}) // catch any two segment topic beginning with `account`
-topics.on('#.created', (topic, event) => {}) // catch any two segment topic ending with `created`
-topics.once('ready', (topic, event) => {}) // removes itself after one even is received
+topics.on('*', (event, topic) => {}) // catch all
+topics.on('#', (event, topic) => {}) // catch all
+topics.on('*', (event, topic) => {}) // catch 'connected'
+topics.on('account.*', (event, topic) => {}) // catch anything starting with 'account'
+topics.on('*.created', (event, topic) => {}) // catch anything ending in .created'
+topics.on('account.#', (event, topic) => {}) // catch any two segment topic beginning with `account`
+topics.on('#.created', (event, topic) => {}) // catch any two segment topic ending with `created`
+topics.once('ready', (event, topic) => {}) // removes itself after one even is received
 
 function handler = () => {}
 topics.on('added', handler)
