@@ -23,11 +23,13 @@ function createTopic (topics, pattern) {
     return topic
 }
 
-function emit (topics, topicName, event) {
+function emit (topics, topicName, event, notify) {
     const results = []
+    let handlers = 0
     _.each(topics, (v) => {
         if (v.test(topicName)) {
             var filtered = _.filter(v.calls).slice(0)
+            handlers += filtered.length
             _.each(filtered, c => {
                 try {
                     const result = c.handle(event, topicName)
@@ -44,6 +46,9 @@ function emit (topics, topicName, event) {
             })
         }
     })
+    if (notify) {
+        notify(handlers > 0)
+    }
     return Promise.all(results)
 }
 
