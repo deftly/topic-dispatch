@@ -1,6 +1,6 @@
 {
   "name": "topic-dispatch",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "a very simplistic amqp-style topic-based dispatcher",
   "main": "src/index.js",
   "scripts": {

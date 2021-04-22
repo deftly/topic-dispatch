@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](///compare/v2.0.0...v2.1.0) (2021-04-22)
+
+
+### Features
+
+* adds callback for delivery verification ([fbf6570](///commit/fbf65706093c715cc6288ae6d6ec698f58e944c0))
+
 ### [1.3.1](///compare/v1.3.0...v1.3.1) (2021-03-10)
 
 
